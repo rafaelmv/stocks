@@ -27,10 +27,14 @@ ENV PATH="/.venv/bin:$PATH"
 
 # Create and switch to a new user
 RUN addgroup -S portfolio_group
-RUN adduser -S -D -h /omnitrix portfolio portfolio_group
+RUN adduser -S -D -h /portfolio portfolio portfolio_group
 
 RUN mkdir /portfolio/app
 WORKDIR /portfolio/app
+
+COPY ./entrypoint.sh .
+RUN sed -i 's/\r$//g' /portfolio/app/entrypoint.sh
+RUN chmod +x /portfolio/app/entrypoint.sh
 
 COPY . /portfolio/app
 
@@ -38,5 +42,4 @@ RUN chown -R portfolio:portfolio_group /portfolio/app
 
 USER portfolio
 
-ENTRYPOINT ["python", "manage.py", "runserver"]
-CMD ["0.0.0.0:8000"]
+ENTRYPOINT ["/portfolio/app/entrypoint.sh"]

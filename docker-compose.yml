@@ -1,0 +1,12 @@
+version: "3"
+   
+services:
+  web:
+    image: local/portfolio
+    build: .
+    command: gunicorn --config=gunicorn_config.py portfolio.wsgi
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+  
